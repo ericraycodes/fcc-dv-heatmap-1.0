@@ -22,15 +22,21 @@ function mapData(dataset) {
     .attr("width", w)
     .attr("height", h);
 
-  // scale Y axis
+  // scale Y
   const yScale = d3.scaleOrdinal()
     .domain([d3.min(dataset, d => d.month), d3.max(dataset, d => d.month)])
     .range([h - padBot, padTop]);
-
-  // scale X axis
+  // scale X
   const xScale = d3.scaleOrdinal()
-    .domain([0, dataset.length])
+    .domain([d3.min(dataset, d => d.year), d3.max(dataset, d => d.year)])
     .range([padLeft, w - padRight]);
+
+  // Y axis
+  const yAxis = d3.axisLeft(yScale);
+  svg.append("g").attr("transform", `translate(${padLeft}, 0)`).call(yAxis);
+  // X axis
+  const xAxis = d3.axisBottom(xScale);
+  svg.append("g").attr("transform", `translate(0, ${h - padBot})`).call(xAxis);
 }
 
 
