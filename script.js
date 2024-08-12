@@ -7,6 +7,29 @@
 function mapData(dataset) {
   // console
   console.log("creating heat map...");
+  // console.log("dataset.monthlyVariance:", dataset.monthlyVariance);
+  // console.log(typeof dataset.monthlyVariance[0].year);
+
+  // data info
+  const months = [
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"
+  ];
+  const yearMin = d3.min(dataset.monthlyVariance, d => d.year);
+  const yearMax = d3.max(dataset.monthlyVariance, d => d.year);
+  console.log("yearmin:", yearMin);
+  console.log("yearmax:", yearMax);
+  let yearRange = [];
+  let year = yearMin;
+  do {
+    yearRange.push(year);
+    year++;
+  } while (year <= yearMax)
+  console.log("yearRange:",yearRange);
+
+  // heading
+  const h1 = d3.select("#title").text("Monthly Global Land Surface Temperature");
+  const h2 = d3.select("#description").html(`${yearMin} - ${yearMax}: base temperature ${dataset.baseTemperature}&deg;C`)
 
   // map dimensions
   const w = 1500;
@@ -22,21 +45,25 @@ function mapData(dataset) {
     .attr("width", w)
     .attr("height", h);
 
-  // scale Y
-  const yScale = d3.scaleOrdinal()
-    .domain([d3.min(dataset, d => d.month), d3.max(dataset, d => d.month)])
-    .range([h - padBot, padTop]);
-  // scale X
-  const xScale = d3.scaleOrdinal()
-    .domain([d3.min(dataset, d => d.year), d3.max(dataset, d => d.year)])
-    .range([padLeft, w - padRight]);
-
   // Y axis
+  const yScale = d3.scaleBand()
+    .domain(months)
+    .range([h - padBot, padTop]);
   const yAxis = d3.axisLeft(yScale);
-  svg.append("g").attr("transform", `translate(${padLeft}, 0)`).call(yAxis);
+  svg.append("g")
+    .attr("transform", `translate(${padLeft}, 0)`)
+    .call(yAxis)
+    .attr("id", "y-axis");
   // X axis
-  const xAxis = d3.axisBottom(xScale);
-  svg.append("g").attr("transform", `translate(0, ${h - padBot})`).call(xAxis);
+  const xScale = d3.scaleBand()
+    .domain(yearRange)
+    .range([padLeft, w - padRight]);
+  const xAxis = d3.axisBottom(xScale)
+    .tickValues(xScale.domain().filter(yr => yr%10===0))
+  svg.append("g")
+    .attr("transform", `translate(0, ${h - padBot})`)
+    .call(xAxis)
+    .attr("id", "x-axis");
 }
 
 
