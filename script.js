@@ -38,7 +38,7 @@ function mapData(dataset) {
   const w = 1500;
   const h = 500;
   const padTop = 10;
-  const padBot = 50;
+  const padBot = 60;
   const padLeft = 100;
   const padRight = 10;
 
@@ -59,6 +59,13 @@ function mapData(dataset) {
     .attr("transform", `translate(${padLeft}, 0)`)
     .call(yAxis)
     .attr("id", "y-axis");
+  svg.append("text")
+    .text("Months")
+    .attr("text-anchor", "start")
+    .attr("x", -250)
+    .attr("y", 30)
+    .style("transform", "rotate(-90deg)")
+    .style("font-size", "80%")
 
   // X axis
   const xScale = d3.scaleBand()
@@ -70,7 +77,13 @@ function mapData(dataset) {
     .attr("transform", `translate(0, ${h - padBot})`)
     .call(xAxis)
     .attr("id", "x-axis");
-
+  svg.append("text")
+    .text("Years")
+    .attr("text-anchor", "start")
+    .attr("x", 750)
+    .attr("y", 480)
+    // .style("transform", "rotate(-90deg)")
+    .style("font-size", "80%")
 
   // heat colors: cold - hot : #3A1078, #6482AD, #C63C51, #921A40
   const tempColors = ['#3A1078', '#6482AD', '#C63C51', '#921A40'];
