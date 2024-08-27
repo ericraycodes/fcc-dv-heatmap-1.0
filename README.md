@@ -27,7 +27,11 @@ Visualizing dataset as heat map. The third certification project of freeCodeCamp
 ## References
  - This is the example [functionality](https://heat-map.freecodecamp.rocks/)
  - TickValues for ordinal scales: [reference](https://observablehq.com/@d3/axis-ticks)
+ - Temperature metric of coldness and hotness: [reference](https://thinkmetric.uk/basics/temperature/)
 
 # Others
 ## HTML Entities used
  - `&deg;`, used for the **degree** symbol
+## Temperature Color Scale Sample
+ - This represents 0 - 15 deg Celcius (freezing point to a cool temperature):
+  `['#002B5B', '#1A5F7A', '#159895', '#57C5B6', '#8EC3B0', '#9ED5C5', '#BCEAD5', '#DEF5E5'];`
