@@ -85,15 +85,14 @@ function mapData(dataset) {
     .style("font-size", "80%")
 
 
-  // heat colors: cold - hot
-    // ['#002B5B', '#1A5F7A', '#159895', '#57C5B6', '#8EC3B0', '#9ED5C5', '#BCEAD5', '#DEF5E5'];
+  // heat colors: cold - cool (0 - 15 deg C)
   const tempColors = ['#002B5B', '#1A5F7A', '#159895', '#57C5B6', '#8EC3B0', '#9ED5C5', '#BCEAD5', '#DEF5E5'];
   // temperature data
   const tempMin = d3.min(dataset.monthlyVariance, d => dataset.baseTemperature + d.variance);
   const tempMax = d3.max(dataset.monthlyVariance, d => dataset.baseTemperature + d.variance);
   console.log("temperature range:", tempMin, '-', tempMax);
 
-  // temp - color scale
+  // temp - color scale : 0 - 15 deg C
   const tempColorScale = d3.scaleQuantize()
     .domain([0, 15])
     .range(tempColors);
@@ -109,7 +108,7 @@ function mapData(dataset) {
     .append("rect")
     .attr("class", "cell")
     .attr("data-year", d => d.year)
-    .attr("data-month", d => months[d.month - 1])    
+    .attr("data-month", d => d.month - 1)    
     .attr("data-temp", d => dataset.baseTemperature + d.variance)
     .attr("width", xScale.bandwidth())
     .attr("height", yScale.bandwidth())
