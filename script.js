@@ -38,7 +38,7 @@ function mapData(dataset) {
   const w = 1500;
   const h = 500;
   const padTop = 10;
-  const padBot = 60;
+  const padBot = 50;
   const padLeft = 100;
   const padRight = 10;
 
@@ -80,13 +80,14 @@ function mapData(dataset) {
   svg.append("text")
     .text("Years")
     .attr("text-anchor", "start")
-    .attr("x", 750)
-    .attr("y", 480)
+    .attr("x", w / 2)
+    .attr("y", h - 10)
     .style("font-size", "80%")
 
 
   // heat colors: cold - cool (0 - 15 deg C)
   const tempColors = ['#002B5B', '#1A5F7A', '#159895', '#57C5B6', '#8EC3B0', '#9ED5C5', '#BCEAD5', '#DEF5E5'];
+  const tempRange = [0, 15];
   // temperature data
   const tempMin = d3.min(dataset.monthlyVariance, d => dataset.baseTemperature + d.variance);
   const tempMax = d3.max(dataset.monthlyVariance, d => dataset.baseTemperature + d.variance);
@@ -94,8 +95,8 @@ function mapData(dataset) {
 
   // temp - color scale : 0 - 15 deg C
   const tempColorScale = d3.scaleQuantize()
-    .domain([0, 15])
-    .range(tempColors);
+    .domain([...tempRange])
+    .range([...tempColors]);
   console.log("color scale:", tempColorScale(tempMax));
 
   console.log("x band:", xScale.bandwidth());
@@ -115,6 +116,51 @@ function mapData(dataset) {
     .attr("x", d => xScale(d.year))
     .attr("y", d => yScale(months[d.month - 1]))
     .attr("fill", d => tempColorScale(dataset.baseTemperature + d.variance))
+
+
+  // Legend
+  const legendWidth = 400;
+  const legendHeight = 60;
+  const legendPad = 20;
+  const legend = d3.select("#legend-container")
+    .append("svg")
+    .attr("width", legendWidth)
+    .attr("height", legendHeight);
+
+  // legend scale
+  const legendScale = d3.scaleLinear()
+    .domain([...tempRange])
+    .range([legendPad, legendWidth - legendPad]);
+
+  // legend axis
+  const legendAxis = d3.axisBottom(legendScale);
+  legend.append("g")
+    .call(legendAxis)
+    .attr("id", "legend")
+    .attr("transform", `translate(0, ${legendHeight - legendPad})`);
+
+  // legend graph
+  legend.selectAll("rect")
+    .data([...tempColors])
+    .enter()
+    .append("rect")
+    .attr("fill", d => d)
+    .attr("x", d => {
+      // legendScale(tempColorScale.invertExtent(d)[0])
+      const x = tempColorScale.invertExtent(d)[0];
+      console.log("x:", x);
+      return legendScale(x);
+    })
+    .attr("y", legendPad)
+    .attr("width", d => {
+      const minMaxArr = tempColorScale.invertExtent(d);
+      console.log("width min-max:", minMaxArr);
+      const width = minMaxArr[1] - minMaxArr[0];
+      console.log("width:", width, legendScale(width));
+      return legendScale(width) - legendPad;
+    })
+    .attr("height", 20)
+    
 }
 
 
