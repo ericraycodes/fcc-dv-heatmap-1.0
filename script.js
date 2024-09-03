@@ -39,7 +39,7 @@ function mapData(dataset) {
   const h = 500;
   const padTop = 10;
   const padBot = 50;
-  const padLeft = 100;
+  const padLeft = 80;
   const padRight = 10;
 
 
@@ -63,7 +63,7 @@ function mapData(dataset) {
     .text("Months")
     .attr("text-anchor", "start")
     .attr("x", -250)
-    .attr("y", 30)
+    .attr("y", 20)
     .style("transform", "rotate(-90deg)")
     .style("font-size", "80%")
 
@@ -86,7 +86,10 @@ function mapData(dataset) {
 
 
   // heat colors: cold - cool (0 - 15 deg C)
-  const tempColors = ['#002B5B', '#1A5F7A', '#159895', '#57C5B6', '#8EC3B0', '#9ED5C5', '#BCEAD5', '#DEF5E5'];
+  const tempColors = [
+    '#002B5B', '#1A5F7A', '#159895', '#57C5B6', 
+    '#9ED5C5', '#BCEAD5', '#DEF5E5', '#F1FADA', '#F2F7A1'
+  ];
   const tempRange = [0, 15];
   // temperature data
   const tempMin = d3.min(dataset.monthlyVariance, d => dataset.baseTemperature + d.variance);
@@ -119,25 +122,25 @@ function mapData(dataset) {
 
 
   // Legend
-  const legendWidth = 400;
-  const legendHeight = 60;
+  const legendWidth = 300;
+  const legendHeight = 50;
   const legendPad = 20;
   const legend = d3.select("#legend-container")
     .append("svg")
+    .attr("id", "legend")
     .attr("width", legendWidth)
     .attr("height", legendHeight);
 
   // legend scale
   const legendScale = d3.scaleLinear()
-    .domain([...tempRange])
+    .domain([tempRange[0] - 1, tempRange[1] + 2])
     .range([legendPad, legendWidth - legendPad]);
 
   // legend axis
   const legendAxis = d3.axisBottom(legendScale);
   legend.append("g")
     .call(legendAxis)
-    .attr("id", "legend")
-    .attr("transform", `translate(0, ${legendHeight - legendPad})`);
+    .attr("transform", `translate(0, ${legendPad})`);
 
   // legend graph
   legend.selectAll("rect")
@@ -151,7 +154,7 @@ function mapData(dataset) {
       console.log("x:", x);
       return legendScale(x);
     })
-    .attr("y", legendPad)
+    .attr("y", 0)
     .attr("width", d => {
       const minMaxArr = tempColorScale.invertExtent(d);
       console.log("width min-max:", minMaxArr);
@@ -160,7 +163,13 @@ function mapData(dataset) {
       return legendScale(width) - legendPad;
     })
     .attr("height", 20)
-    
+  legend.append("text")
+    // .text("Years")
+    .html(`&deg;C`)
+    .attr("text-anchor", "start")
+    .attr("x", 290)
+    .attr("y", 30)
+    .style("font-size", "80%") 
 }
 
 
