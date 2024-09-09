@@ -29,21 +29,21 @@ function mapData(dataset) {
   console.log("yearRange:",yearRange);
 
 
-  // heading
+  // HEADING: Title and Description
   const h1 = d3.select("#title").text("Monthly Global Land Surface Temperature");
   const h2 = d3.select("#description").html(`${yearMin} - ${yearMax}: base temperature ${dataset.baseTemperature}&deg;C`);
 
 
   // map dimensions
-  const w = 1500;
+  const w = 1450;
   const h = 500;
   const padTop = 10;
   const padBot = 50;
-  const padLeft = 80;
+  const padLeft = 70;
   const padRight = 10;
 
 
-  // svg
+  // HEAT MAP SVG
   const svg = d3.select("#heatmap-container")
     .append("svg")
     .attr("width", w)
@@ -63,7 +63,7 @@ function mapData(dataset) {
     .text("Months")
     .attr("text-anchor", "start")
     .attr("x", -250)
-    .attr("y", 20)
+    .attr("y", 10)
     .style("transform", "rotate(-90deg)")
     .style("font-size", "80%")
 
@@ -105,8 +105,10 @@ function mapData(dataset) {
   console.log("x band:", xScale.bandwidth());
   console.log("y band:", yScale.bandwidth());
 
-  // heat cells
-  svg.selectAll("rect")
+  // TOOLTIP
+  const tooltip = d3.select("#tooltip");
+  // HEAT CELLS
+  const cells = svg.selectAll("rect")
     .data(dataset.monthlyVariance)
     .enter()
     .append("rect")
@@ -119,10 +121,29 @@ function mapData(dataset) {
     .attr("x", d => xScale(d.year))
     .attr("y", d => yScale(months[d.month - 1]))
     .attr("fill", d => tempColorScale(dataset.baseTemperature + d.variance))
+    .on("mouseover", d => {
+      console.log("mouseover:", d3.event)
+      tooltip
+        .attr("data-year", d.year)
+        .html(
+          `
+          <p>${d.year} - ${months[d.month - 1]}</p>
+          <p>${Math.round((dataset.baseTemperature + d.variance) * 1000) / 1000} &deg;C</p>
+          `
+        )
+        .style("visibility", "visible")
+        .style("left", d3.event.pageX - 20 + "px")
+        // .style("top", d3.event.pageY - 70 + "px")
+        .style("top", d3.event.pageY - d3.event.target.height.baseVal.value + "px")
+    })
+    .on("mouseout", d => {
+      tooltip
+        .style("visibility", "hidden")
+    })
 
 
-  // Legend
-  const legendWidth = 300;
+  // LEGEND
+  const legendWidth = 400;
   const legendHeight = 50;
   const legendPad = 20;
   const legend = d3.select("#legend-container")
@@ -130,18 +151,15 @@ function mapData(dataset) {
     .attr("id", "legend")
     .attr("width", legendWidth)
     .attr("height", legendHeight);
-
   // legend scale
   const legendScale = d3.scaleLinear()
-    .domain([tempRange[0] - 1, tempRange[1] + 2])
+    .domain([tempRange[0] - 1, tempRange[1] + 1])
     .range([legendPad, legendWidth - legendPad]);
-
   // legend axis
   const legendAxis = d3.axisBottom(legendScale);
   legend.append("g")
     .call(legendAxis)
     .attr("transform", `translate(0, ${legendPad})`);
-
   // legend graph
   legend.selectAll("rect")
     .data([...tempColors])
@@ -154,22 +172,24 @@ function mapData(dataset) {
       console.log("x:", x);
       return legendScale(x);
     })
-    .attr("y", 0)
+    .attr("y", legendPad / 2)
     .attr("width", d => {
       const minMaxArr = tempColorScale.invertExtent(d);
       console.log("width min-max:", minMaxArr);
       const width = minMaxArr[1] - minMaxArr[0];
       console.log("width:", width, legendScale(width));
-      return legendScale(width) - legendPad;
+      return legendScale(width) - legendPad*2;
     })
-    .attr("height", 20)
+    .attr("height", legendPad / 2);
   legend.append("text")
-    // .text("Years")
     .html(`&deg;C`)
     .attr("text-anchor", "start")
-    .attr("x", 290)
+    .attr("x", 390)
     .attr("y", 30)
-    .style("font-size", "80%") 
+    .style("font-size", "80%");
+
+
+
 }
 
 
