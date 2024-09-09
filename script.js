@@ -88,13 +88,14 @@ function mapData(dataset) {
   // heat colors: cold - cool (0 - 15 deg C)
   const tempColors = [
     '#002B5B', '#1A5F7A', '#159895', '#57C5B6', 
-    '#9ED5C5', '#BCEAD5', '#DEF5E5', '#F1FADA', '#F2F7A1'
+    '#9ED5C5', '#BCEAD5', '#DEF5E5', '#F1FADA', 
   ];
-  const tempRange = [0, 15];
   // temperature data
   const tempMin = d3.min(dataset.monthlyVariance, d => dataset.baseTemperature + d.variance);
   const tempMax = d3.max(dataset.monthlyVariance, d => dataset.baseTemperature + d.variance);
   console.log("temperature range:", tempMin, '-', tempMax);
+  // const tempRange = [0, 15];
+  const tempRange = [0, 15];
 
   // temp - color scale : 0 - 15 deg C
   const tempColorScale = d3.scaleQuantize()
@@ -121,20 +122,25 @@ function mapData(dataset) {
     .attr("x", d => xScale(d.year))
     .attr("y", d => yScale(months[d.month - 1]))
     .attr("fill", d => tempColorScale(dataset.baseTemperature + d.variance))
+    // mouse-event tooltip
     .on("mouseover", d => {
-      console.log("mouseover:", d3.event)
+      console.log("mouseover:", d3.event);
+      const cellDOM = d3.event.target.getBoundingClientRect();
+      console.log("cellDOM:", cellDOM);
       tooltip
         .attr("data-year", d.year)
         .html(
           `
-          <p>${d.year} - ${months[d.month - 1]}</p>
+          <p>${d.year} ${months[d.month - 1]}</p>
           <p>${Math.round((dataset.baseTemperature + d.variance) * 1000) / 1000} &deg;C</p>
           `
         )
         .style("visibility", "visible")
-        .style("left", d3.event.pageX - 20 + "px")
-        // .style("top", d3.event.pageY - 70 + "px")
-        .style("top", d3.event.pageY - d3.event.target.height.baseVal.value + "px")
+        .style("top", cellDOM.y - 55 + "px");
+      const tooltipDOM = document.querySelector("#tooltip").getBoundingClientRect();
+      console.log("tooltipDOM:", tooltipDOM);
+      tooltip
+        .style("left", cellDOM.x + (cellDOM.width/2) - (tooltipDOM.width / 2) + "px");
     })
     .on("mouseout", d => {
       tooltip
@@ -167,7 +173,6 @@ function mapData(dataset) {
     .append("rect")
     .attr("fill", d => d)
     .attr("x", d => {
-      // legendScale(tempColorScale.invertExtent(d)[0])
       const x = tempColorScale.invertExtent(d)[0];
       console.log("x:", x);
       return legendScale(x);
