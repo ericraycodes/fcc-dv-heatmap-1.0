@@ -28,6 +28,9 @@ Visualizing dataset as heat map. The third certification project of freeCodeCamp
  - This is the example [functionality](https://heat-map.freecodecamp.rocks/)
  - TickValues for ordinal scales: [reference](https://observablehq.com/@d3/axis-ticks)
  - Temperature metric of coldness and hotness: [reference](https://thinkmetric.uk/basics/temperature/)
+ - SVG CSS styling: [stroke](https://www.w3schools.com/graphics/svg_stroking.asp)
+ - How to access DOM element's box properties: [HTMLElement.getBoundingClientRect()](https://developer.mozilla.org/en-US/docs/Web/API/DOMRect)
+ - How to keep mouse-events on elements beneath the hovering tooltip: [pointer-events: none](https://www.geeksforgeeks.org/how-to-click-through-a-div-to-its-underlying-elements-in-css/)
 
 # Others
 ## HTML Entities used
