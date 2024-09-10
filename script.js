@@ -125,8 +125,6 @@ function mapData(dataset) {
     // mouse-event tooltip
     .on("mouseover", d => {
       console.log("mouseover:", d3.event);
-      const cellDOM = d3.event.target.getBoundingClientRect();
-      console.log("cellDOM:", cellDOM);
       tooltip
         .attr("data-year", d.year)
         .html(
@@ -134,17 +132,20 @@ function mapData(dataset) {
           <p>${d.year} ${months[d.month - 1]}</p>
           <p>${Math.round((dataset.baseTemperature + d.variance) * 1000) / 1000} &deg;C</p>
           `
-        )
-        .style("visibility", "visible")
-        .style("top", cellDOM.y - 55 + "px");
-      const tooltipDOM = document.querySelector("#tooltip").getBoundingClientRect();
-      console.log("tooltipDOM:", tooltipDOM);
+        );
+      const cellRect = d3.event.target.getBoundingClientRect();
+      const tooltipRect = document.querySelector("#tooltip").getBoundingClientRect();
+      console.log("DOMRect cell, tooltip:", cellRect, tooltipRect);
       tooltip
-        .style("left", cellDOM.x + (cellDOM.width/2) - (tooltipDOM.width / 2) + "px");
+        .style("top", cellRect.y - 55 + "px")
+        .style("left", cellRect.x + (cellRect.width/2) - (tooltipRect.width / 2) + "px")
+        .style("visibility", "visible");
     })
     .on("mouseout", d => {
       tooltip
         .style("visibility", "hidden")
+        .style("top", "0px")
+        .style("left", "0px");
     })
 
 

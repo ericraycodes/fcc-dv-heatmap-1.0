@@ -22,23 +22,8 @@ header {
 footer {
 	font-size: 0.7rem;
 }
-main {
-/*	border: 1px solid lightgray;*/
-}
 
-/* tooltip */
-#tooltip {
-	pointer-events: none;
-	visibility: hidden;
-	position: fixed;
-	background-color: black;
-	opacity: 0.7;
-	color: white;
-	font-size: 90%;
-	line-height: 150%;
-	padding: 3px 10px;
-	border-radius: 3px;
-}
+/* heat cells */
 .cell {
 	stroke: white;
 	stroke-width: 0.05px;
@@ -46,4 +31,20 @@ main {
 .cell:hover {
 	stroke: orange;
 	stroke-width: 2px;
+}
+
+/* tooltip */
+#tooltip {
+	/* behavior	*/
+	pointer-events: none;
+	visibility: hidden;
+	position: fixed;
+	/* readability */
+	background-color: black;
+	opacity: 0.7;
+	color: white;
+	font-size: 90%;
+	line-height: 150%;
+	padding: 3px 10px;
+	border-radius: 3px;
 }
