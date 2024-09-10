@@ -6,7 +6,7 @@
     */
 function mapData(dataset) {
   // console
-  console.log("creating heat map...");
+  console.log("VISUALIZING...");
   // console.log("dataset.monthlyVariance:", dataset.monthlyVariance);
   // console.log(typeof dataset.monthlyVariance[0].year);
 
@@ -66,6 +66,7 @@ function mapData(dataset) {
     .attr("y", 10)
     .style("transform", "rotate(-90deg)")
     .style("font-size", "80%")
+  console.log("Y-axis: Months");
 
   // X axis
   const xScale = d3.scaleBand()
@@ -83,6 +84,7 @@ function mapData(dataset) {
     .attr("x", w / 2)
     .attr("y", h - 10)
     .style("font-size", "80%")
+  console.log("X-axis: Years");
 
 
   // heat colors: cold - cool (0 - 15 deg C)
@@ -124,7 +126,7 @@ function mapData(dataset) {
     .attr("fill", d => tempColorScale(dataset.baseTemperature + d.variance))
     // mouse-event tooltip
     .on("mouseover", d => {
-      console.log("mouseover:", d3.event);
+      console.log("\nmouseover:", d3.event);
       tooltip
         .attr("data-year", d.year)
         .html(
@@ -138,15 +140,18 @@ function mapData(dataset) {
       console.log("DOMRect cell, tooltip:", cellRect, tooltipRect);
       tooltip
         .style("top", cellRect.y - 55 + "px")
-        .style("left", cellRect.x + (cellRect.width/2) - (tooltipRect.width / 2) + "px")
+        .style("left", cellRect.x + (cellRect.width / 2) - (tooltipRect.width / 2) + "px")
         .style("visibility", "visible");
     })
     .on("mouseout", d => {
       tooltip
+        .attr("data-year", "")
+        // .html("")
         .style("visibility", "hidden")
         .style("top", "0px")
         .style("left", "0px");
-    })
+    });
+  console.log("\nHEAT MAP ON PAGE\n\n");
 
 
   // LEGEND
@@ -193,7 +198,7 @@ function mapData(dataset) {
     .attr("x", 390)
     .attr("y", 30)
     .style("font-size", "80%");
-
+  console.log("\nLEGEND ON PAGE\n\n");
 
 
 }
