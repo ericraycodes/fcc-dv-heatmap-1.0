@@ -146,7 +146,7 @@ function mapData(dataset) {
     .on("mouseout", d => {
       tooltip
         .attr("data-year", "")
-        // .html("")
+        .html("")
         .style("visibility", "hidden")
         .style("top", "0px")
         .style("left", "0px");
